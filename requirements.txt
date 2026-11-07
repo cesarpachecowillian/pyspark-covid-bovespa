@@ -1,6 +1,7 @@
-pyspark==3.5.*
+pyspark==3.5.9
 pandas
 numpy
 matplotlib
 gdown
+install-jdk
 jupyter

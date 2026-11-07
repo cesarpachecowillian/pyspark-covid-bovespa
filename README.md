@@ -41,22 +41,31 @@ Atividades da disciplina **Big Data Analytics** da Especialização em Inteligê
 <img src="figuras/11_idades_pr_evolucao.png" width="49%" alt="Idade por evolução do caso no Paraná">
 </p>
 
-O pico de exames foi em 13/07/2020, com 98.871 pacientes em um único dia; a idade é a variável que mais separa desfechos leves de internações e óbitos.
+O pico de exames foi em 13/07/2020, com 99.016 pacientes em um único dia; a idade é a variável que mais separa desfechos leves de internações e óbitos.
 
 ## Como executar
 
-Os notebooks foram feitos para o **Google Colab** e não dependem de nenhum arquivo deste repositório: a primeira célula instala o PySpark e a terceira baixa a base com `gdown`. Basta abrir o notebook no Colab e executar todas as células.
-
-Para rodar localmente:
+Cada notebook é **autossuficiente** e não depende de nenhum outro arquivo deste repositório. Foi pensado para rodar **localmente** (Windows, Linux ou macOS), mas também roda no Google Colab.
 
 ```bash
-pip install -r requirements.txt   # requer Java 8, 11 ou 17 instalado
+pip install -r requirements.txt
 jupyter notebook notebooks/
 ```
 
+* **Python 3.9 a 3.12** (recomendado: **3.11**). O PySpark 3.5 não funciona no Python 3.14; a primeira célula avisa se o kernel for incompatível.
+* **Java 8, 11, 17 ou 21.** Se não houver um desses na máquina, a primeira célula baixa um JDK 17 portátil para `~/.jdk`, sem alterar o sistema.
+* A primeira célula também instala o `pyspark==3.5.9` e o `gdown` se faltarem, e aponta o Spark para o mesmo Python do Jupyter.
+* A terceira célula baixa a base para a pasta do notebook na primeira execução; nas seguintes, reaproveita o arquivo.
+
+**Detalhes de execução local resolvidos nos notebooks**
+
+* **Caminho com espaços e acentos.** O caminho do CSV é montado como `file:///E:/pasta com espaços/arquivo.csv`, sem codificar (`%20`, `%C3%A7`), porque o Hadoop não decodifica essas sequências.
+* **Timeout dos workers Python no Windows.** No Windows o PySpark não usa o processo *daemon* e cada worker mantém o tempo limite de 15 s da conexão com a JVM; em consultas com *shuffle* (como o `leftOuterJoin`) o worker cai com `TimeoutError`. A sessão define `spark.python.authenticate.socketTimeout = 1h` para evitar isso.
+* **Datas reprodutíveis.** O fuso da sessão é fixado em UTC, para que as conversões de data deem o mesmo resultado em qualquer máquina.
+
 ## Dados
 
-As bases foram disponibilizadas pelo professor e são baixadas automaticamente pelos notebooks:
+As bases foram disponibilizadas pelo professor. Como o link original atinge com frequência o limite de downloads do Google Drive, os notebooks baixam cópias idênticas hospedadas no Drive do autor:
 
 | Arquivo | Conteúdo | Tamanho aproximado |
 |---|---|---|
@@ -68,7 +77,7 @@ Por causa do tamanho (o GitHub limita arquivos a 100 MB), as bases não estão v
 
 ## Tecnologias
 
-Python, Apache Spark 3.5 (PySpark: RDD, DataFrame, Spark SQL), Matplotlib, pandas, Google Colab.
+Python, Apache Spark 3.5 (PySpark: RDD, DataFrame, Spark SQL), Matplotlib, pandas, Jupyter.
 
 ## Autor
 
